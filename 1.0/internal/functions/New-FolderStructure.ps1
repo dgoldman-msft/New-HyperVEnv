@@ -26,21 +26,19 @@ function New-FolderStructure {
         $LabImageDirectory
     )
 
-    begin { Write-ToLogFile "$(Get-TimeStamp) Building New Directory Structure" -LabImageDirectory $LabImageDirectory -ErrorAction Stop }
-
-    process {
-        try {
-            # Check for dependencies
-            if (-NOT( Test-Path -Path $LabImageDirectory ) ) {
-                if ($PSCmdlet.ShouldProcess("Creating New Default Lab Directory")) {
-                    New-Item -Path $LabImageDirectory -ItemType Directory -ErrorAction Stop | Out-Null
-                }
+    begin {
+        if (-NOT(Test-Path -Path $LabImageDirectory) ) {
+            if ($PSCmdlet.ShouldProcess("Creating New Default Lab Directory Structure")) {
+                New-Item -Path $LabImageDirectory -ItemType Directory -ErrorAction Stop | Out-Null
+                Write-ToLogFile "$(Get-TimeStamp) Creating New Default Lab Directory Structure" -LabImageDirectory $LabImageDirectory -ErrorAction Stop }
             }
             else {
                 Write-ToLogFile "$(Get-TimeStamp) Folder: $($LabImageDirectory) already exists" -LabImageDirectory $LabImageDirectory -ErrorAction Stop
             }
+        }
 
-            # Create sub directories
+    process {
+        try {
             if (New-SubDirectory -LabImageDirectory $LabImageDirectory) { return $true } else { return $false }
         }
         catch {

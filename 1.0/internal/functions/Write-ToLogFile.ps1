@@ -24,7 +24,7 @@
     #>
 
     [OutputType('System.String')]
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param(
         [string]
         $LabImageDirectory,
@@ -38,6 +38,12 @@
     )
 
     process {
+        if (-NOT(Test-Path -Path (Join-Path -Path $LabImageDirectory -ChildPath $LoggingDirectory))) {
+            if ($PSCmdlet.ShouldProcess("Creating New Logging Directory")) {
+                New-Item -Path (Join-Path -Path $LabImageDirectory -ChildPath $LoggingDirectory) -ItemType Directory -ErrorAction Stop | Out-Null
+            }
+        }
+
         try {
             # Console and log file output
             Write-Output $StringObject

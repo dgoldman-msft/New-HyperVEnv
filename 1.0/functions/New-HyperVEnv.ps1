@@ -41,7 +41,7 @@
     #>
 
     [Alias('NewEnv')]
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'Default')]
     param(
         [Int]
         $DefaultProcessorCount = 2,
@@ -65,52 +65,48 @@
     )
 
     begin {
+        New-FolderStructure -LabImageDirectory $LabImageDirectory
         Write-ToLogFile "$(Get-TimeStamp) Starting process" -LabImageDirectory $LabImageDirectory -ErrorAction Stop
     }
 
     process {
         # Download Kali Linux VHDX
-        if ($DownloadKali) {
-            Get-Kali -LabImageDirectory $LabImageDirectory
-            Write-ToLogFile "$(Get-TimeStamp) Kali Linux image downloading in the background" -LabImageDirectory $LabImageDirectory -ErrorAction Stop
-        }
-        else {
-            Write-ToLogFile "$(Get-TimeStamp) User specified not to download Kali Linux image" -LabImageDirectory $LabImageDirectory -ErrorAction Stop
-        }
-
         try {
-            if (New-FolderStructure -LabImageDirectory $LabImageDirectory) {
-                if (Install-7Zip) {
-                    if (New-HyperVLab) {
-                        if (New-HyperVSwitch -SwitchName $switchName) {
-                            switch ($ImageType) {
-                                'All' {
-                                    Write-ToLogFile "$(Get-TimeStamp) Creating Windows and Kali Virtual Machines" -LabImageDirectory $LabImageDirectory -ErrorAction Stop
-                                    New-WinVm -LabImageDirectory $LabImageDirectory -DefaultProcessorCount $DefaultProcessorCount -Memory $Memory -SwitchName $switchName
-                                    New-KaliVm -LabImageDirectory $LabImageDirectory -DefaultProcessorCount $DefaultProcessorCount -Memory $Memory -SwitchName $switchName -DownloadKali:$DownloadKali
-                                }
-                                'Windows' {
-                                    Write-ToLogFile "$(Get-TimeStamp) Creating Windows Virtual Machines" -LabImageDirectory $LabImageDirectory -ErrorAction Stop
-                                    New-WinVm -LabImageDirectory $LabImageDirectory -DefaultProcessorCount $DefaultProcessorCount -Memory $Memory -SwitchName $switchName -DownloadKali:$DownloadKali
-                                }
-                                'Kali' {
-                                    Write-ToLogFile "$(Get-TimeStamp) Creating Kali Virtual Machines" -LabImageDirectory $LabImageDirectory -ErrorAction Stop
-                                    New-KaliVm -LabImageDirectory $LabImageDirectory -DefaultProcessorCount $DefaultProcessorCount -Memory $Memory -SwitchName $switchName -DownloadKali:$DownloadKali
-                                }
-                            }
-
-                            Write-ToLogFile "$(Get-TimeStamp) All processing completed successfully!" -LabImageDirectory $LabImageDirectory -ErrorAction Stop
-                        }
-                        else {
-                            return
-                        }
-
-                        # Display all VMs
-                        Get-LabVM -LabImageDirectory $LabImageDirectory | Format-Table
-                    }
+            if (Install-7Zip) {
+                if ($DownloadKali) {
+                    Get-Kali -LabImageDirectory $LabImageDirectory
+                    Write-ToLogFile "$(Get-TimeStamp) Kali Linux image downloading in the background" -LabImageDirectory $LabImageDirectory -ErrorAction Stop
                 }
                 else {
-                    return
+                    Write-ToLogFile "$(Get-TimeStamp) User specified not to download Kali Linux image" -LabImageDirectory $LabImageDirectory -ErrorAction Stop
+                }
+
+                if (New-HyperVLab) {
+                    if (New-HyperVSwitch -SwitchName $switchName) {
+                        switch ($ImageType) {
+                            'All' {
+                                Write-ToLogFile "$(Get-TimeStamp) Creating Windows and Kali Virtual Machines" -LabImageDirectory $LabImageDirectory -ErrorAction Stop
+                                New-WinVm -LabImageDirectory $LabImageDirectory -DefaultProcessorCount $DefaultProcessorCount -Memory $Memory -SwitchName $switchName
+                                New-KaliVm -LabImageDirectory $LabImageDirectory -DefaultProcessorCount $DefaultProcessorCount -Memory $Memory -SwitchName $switchName -DownloadKali:$DownloadKali
+                            }
+                            'Windows' {
+                                Write-ToLogFile "$(Get-TimeStamp) Creating Windows Virtual Machines" -LabImageDirectory $LabImageDirectory -ErrorAction Stop
+                                New-WinVm -LabImageDirectory $LabImageDirectory -DefaultProcessorCount $DefaultProcessorCount -Memory $Memory -SwitchName $switchName -DownloadKali:$DownloadKali
+                            }
+                            'Kali' {
+                                Write-ToLogFile "$(Get-TimeStamp) Creating Kali Virtual Machines" -LabImageDirectory $LabImageDirectory -ErrorAction Stop
+                                New-KaliVm -LabImageDirectory $LabImageDirectory -DefaultProcessorCount $DefaultProcessorCount -Memory $Memory -SwitchName $switchName -DownloadKali:$DownloadKali
+                            }
+                        }
+
+                        Write-ToLogFile "$(Get-TimeStamp) All processing completed successfully!" -LabImageDirectory $LabImageDirectory -ErrorAction Stop
+                    }
+                    else {
+                        return
+                    }
+
+                    # Display all VMs
+                    Get-LabVM -LabImageDirectory $LabImageDirectory | Format-Table
                 }
             }
             else {
