@@ -87,15 +87,15 @@
                             'All' {
                                 Write-ToLogFile "$(Get-TimeStamp) Creating Windows and Kali Virtual Machines" -LabImageDirectory $LabImageDirectory -ErrorAction Stop
                                 New-WinVm -LabImageDirectory $LabImageDirectory -DefaultProcessorCount $DefaultProcessorCount -Memory $Memory -SwitchName $switchName
-                                New-KaliVm -LabImageDirectory $LabImageDirectory -DefaultProcessorCount $DefaultProcessorCount -Memory $Memory -SwitchName $switchName -DownloadKali:$DownloadKali
+                                New-KaliVm -LabImageDirectory $LabImageDirectory -DefaultProcessorCount $DefaultProcessorCount -Memory $Memory -SwitchName $switchName
                             }
                             'Windows' {
                                 Write-ToLogFile "$(Get-TimeStamp) Creating Windows Virtual Machines" -LabImageDirectory $LabImageDirectory -ErrorAction Stop
-                                New-WinVm -LabImageDirectory $LabImageDirectory -DefaultProcessorCount $DefaultProcessorCount -Memory $Memory -SwitchName $switchName -DownloadKali:$DownloadKali
+                                New-WinVm -LabImageDirectory $LabImageDirectory -DefaultProcessorCount $DefaultProcessorCount -Memory $Memory -SwitchName $switchName
                             }
                             'Kali' {
                                 Write-ToLogFile "$(Get-TimeStamp) Creating Kali Virtual Machines" -LabImageDirectory $LabImageDirectory -ErrorAction Stop
-                                New-KaliVm -LabImageDirectory $LabImageDirectory -DefaultProcessorCount $DefaultProcessorCount -Memory $Memory -SwitchName $switchName -DownloadKali:$DownloadKali
+                                New-KaliVm -LabImageDirectory $LabImageDirectory -DefaultProcessorCount $DefaultProcessorCount -Memory $Memory -SwitchName $switchName
                             }
                         }
 
