@@ -43,7 +43,9 @@
                         Write-ToLogFile "$(Get-TimeStamp) Configuring the IP address for the Hyper-V switch" -LabImageDirectory $LabImageDirectory -ErrorAction Stop
                         $ifIndex = (Get-NetAdapter | Where-Object { $_.Name -match $SwitchName }).ifIndex
                         New-NetIPAddress -IPAddress 192.168.1.1 -PrefixLength 24 -InterfaceIndex $ifIndex -ErrorAction Stop
-                        Write-ToLogFile "$(Get-TimeStamp) New-NetIPAddress configured successfully!" -LabImageDirectory $LabImageDirectory -ErrorAction Stop
+                        Write-ToLogFile "$(Get-TimeStamp) New Net IP Address configured successfully!" -LabImageDirectory $LabImageDirectory -ErrorAction Stop
+                        New-NetNAT -Name "NAT-Network" -InternalIPInterfaceAddressPrefix 192.168.1.0/24 -ErrorAction Stop
+                        Write-ToLogFile "$(Get-TimeStamp) New Net Nat configured successfully!" -LabImageDirectory $LabImageDirectory -ErrorAction Stop
                         return $true
                     }
                     else {
