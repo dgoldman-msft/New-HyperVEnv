@@ -32,10 +32,10 @@ function Get-Kali {
     begin {
         Write-ToLogFile "$(Get-TimeStamp) Download an image of Kali Linux" -LabImageDirectory $LabImageDirectory -ErrorAction Stop
         Write-ToLogFile "$(Get-TimeStamp) Downloading Kali Linux VHD from https://cdimage.kali.org/" -LabImageDirectory $LabImageDirectory -ErrorAction Stop
-        $kaliImageDir = "kali-linux-2024.1-hyperv-amd64"
-        $kaliVHDX = "kali-linux-2024.1-hyperv-amd64.vhdx"
-        $kaliZipName = "kali-linux-2024.1-hyperv-amd64.7z"
-        $kaliVHDUrl = "https://cdimage.kali.org/kali-2024.1/$kaliZipName"
+        $kaliImageDir = "kali-linux-2026.1-hyperv-amd64"
+        $kaliVHDX = "kali-linux-2026.1-hyperv-amd64.vhdx"
+        $kaliZipName = "kali-linux-2026.1-hyperv-amd64.7z"
+        $kaliVHDUrl = "https://cdimage.kali.org/kali-2026.1/$kaliZipName"
     }
 
     process {
